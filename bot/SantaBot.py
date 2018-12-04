@@ -102,7 +102,7 @@ class SantaBot:
 
                 currentLinksId = [eachLink.santa_id for eachLink in currentLinks]
 
-                currParticipantsNames = [self.session.query(Participant).filter(Participant.telegram_id == eachCurrentMemberId).first().telegram_username for eachCurrentMemberId in currentLinksId]
+                currParticipantsNames = [self.session.query(Participant).filter(Participant.id == eachCurrentMemberId).first().telegram_username for eachCurrentMemberId in currentLinksId]
 
                 message = "The participants currently registered are: \n" + "\n".join(currParticipantsNames)
 
