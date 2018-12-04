@@ -99,11 +99,13 @@ class SantaBot:
 
             else:
 
+                chat_internal_id = group_exists.id
+
                 print(self.session.query(Link).all())
                 print(self.session.query(Link).join(Participant, Link.santa_id == Participant.id).all())
-                print(self.session.query(Link).filter(Link.group_id == chat_id).join(Participant, Link.santa_id == Participant.id).all())
+                print(self.session.query(Link).filter(Link.group_id == chat_internal_id).join(Participant, Link.santa_id == Participant.id).all())
 
-                currentLinks = self.session.query(Link).filter(Link.group_id == chat_id).join(Participant, Link.santa_id == Participant.id).all()
+                currentLinks = self.session.query(Link).filter(Link.group_id == chat_internal_id).join(Participant, Link.santa_id == Participant.id).all()
 
                 print(currentLinks)
 
