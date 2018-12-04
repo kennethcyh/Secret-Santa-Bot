@@ -98,13 +98,15 @@ class SantaBot:
                 return
 
             else:
-                currentLinks = self.session.query(Link).filter(Link.group_id == chat_id).all()
+                currentLinks = self.session.query(Link).filter(Link.group_id == chat_id).join(Participant).all()
 
-                currentLinksId = [eachLink.santa_id for eachLink in currentLinks]
+                print(currentLinks)
 
-                currParticipantsNames = [self.session.query(Participant).filter(Participant.id == eachCurrentMemberId).first().telegram_username for eachCurrentMemberId in currentLinksId]
+                currentLinksUserName = [eachLink.telegram_username for eachLink in currentLinks]
 
-                message = "The participants currently registered are: \n" + "\n".join(currParticipantsNames)
+                print(currentLinksUserName)
+
+                message = "The participants currently registered are: \n" + "\n".join(currentLinksUserName)
 
                 update.message.reply_text(message)
 
