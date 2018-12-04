@@ -63,6 +63,7 @@ class SantaBot:
 
         handlers = [
             CommandHandler('start', self.start),
+            CommandHandler('status', self.status),
             CommandHandler('help', self.help),
             CommandHandler('hello', self.hello),
             CommandHandler('request', self.show_request),
@@ -79,6 +80,37 @@ class SantaBot:
             dispatcher.add_handler(handler)
 
         updater.start_polling()
+
+    def status(self, bot, update):
+        try:
+            chat_type = update.message.chat.type
+            if chat_type == "private":
+                message = "You can only get status from a group chat"
+                update.message.reply_text(message)
+                return
+
+            chat_id = update.message.chat.id
+            group_exists = self.session.query(Group).filter(Group.telegram_id == chat_id).first()
+            print(group_exists)
+            if not group_exists:
+                message = "Hello! This group currently has not been initiated. Please use the /hello command to do so."
+                update.message.reply_text(message)
+                return
+
+            else:
+                currentLinks = self.session.query(Link).filter(Link.group_id == chat_id).all()
+
+                currentLinksId = [eachLink.receiver_id for eachLink in currentLinks]
+
+                currParticipantsNames = [self.session.query(Participant).filter(Participant.telegram_id == eachCurrentMemberId).first().telegram_username for eachCurrentMemberId in currentLinksId]
+
+                message = "The participants currently registered are: \n" + "\n".join(currParticipantsNames)
+
+                update.message.reply_text(message)
+
+                return
+        except Exception as this_ex:
+            print(this_ex)
 
     def start(self, bot, update):
         try:
@@ -128,7 +160,9 @@ class SantaBot:
                   "Begins the gift exchange by assigning a recipient to every participant, then " \
                   "messaging them privately the details. \n" \
                   "/reset_exchange \n" \
-                  "Resets the gift exchange by removing every participant's assigned recipient."
+                  "Resets the gift exchange by removing every participant's assigned recipient. \n" \
+                  "/status \n" \
+                  "Shows the number of people currently registered for the Secret Santa."
         update.message.reply_text(message)
 
     def show_request(self, bot, update):
