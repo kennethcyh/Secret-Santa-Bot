@@ -98,6 +98,10 @@ class SantaBot:
                 return
 
             else:
+
+                print(self.session.query(Link).all())
+                print(self.session.query(Link).join(Participant, Link.santa_id == Participant.id).all())
+
                 currentLinks = self.session.query(Link).join(Participant, Link.santa_id == Participant.id).filter(Link.group_id == chat_id).all()
 
                 print(currentLinks)
