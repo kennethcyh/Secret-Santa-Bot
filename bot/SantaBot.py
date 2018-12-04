@@ -100,7 +100,7 @@ class SantaBot:
             else:
                 currentLinks = self.session.query(Link).filter(Link.group_id == chat_id).all()
 
-                currentLinksId = [eachLink.receiver_id for eachLink in currentLinks]
+                currentLinksId = [eachLink.santa_id for eachLink in currentLinks]
 
                 currParticipantsNames = [self.session.query(Participant).filter(Participant.telegram_id == eachCurrentMemberId).first().telegram_username for eachCurrentMemberId in currentLinksId]
 
